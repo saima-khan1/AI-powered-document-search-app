@@ -1,16 +1,16 @@
-import Image from "next/image";
+import FileUpload from "./components/file-upload";
+import Navbar from "./components/navbar";
 
 export default function Home() {
   return (
-    <div className="min-h-screen w-screen flex">
-      {/* Left half */}
-      <div className="w-1/2 bg-gray-100 flex items-center justify-center">
-        Upload Section
-      </div>
-
-      {/* Right half */}
-      <div className="w-1/2 bg-gray-200 flex items-center justify-center">
-        Chatbot
+    <div className="min-h-screen w-screen flex flex-col">
+      {" "}
+      <Navbar />
+      <div className="flex flex-row">
+        <div className="w-[40vh] min-h-screen ">
+          <FileUpload />
+        </div>
+        <div className="w-[60vh] min-h-screen border-l-1">Chatbot</div>
       </div>
     </div>
   );
