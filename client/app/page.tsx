@@ -6,9 +6,13 @@ export default function Home() {
     <div className="min-h-screen w-screen flex flex-col">
       {" "}
       <Navbar />
-      <div className="flex flex-row">
-        <div className="w-[40vh] min-h-screen ">
-          <FileUpload />
+      <div className="flex flex-1 flex-row">
+        <div className="w-[40vh] min-h-screen flex  justify-center py-30 ">
+          <div>
+            {" "}
+            <h1 className="font-bold text-3xl text-center">Hello, User</h1>
+            <FileUpload />
+          </div>
         </div>
         <div className="w-[60vh] min-h-screen border-l-1">Chatbot</div>
       </div>
