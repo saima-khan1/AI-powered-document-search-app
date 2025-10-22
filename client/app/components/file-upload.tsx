@@ -27,7 +27,7 @@ const FileUpload: React.FC = () => {
       const result = await uploadFile(file);
       setUploadedFile(result.fileName);
     } catch (err) {
-      console.error("uplaod failed", err);
+      console.error("upload failed", err);
     } finally {
       setUploading(false);
     }
