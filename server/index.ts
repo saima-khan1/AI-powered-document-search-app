@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import multer from "multer";
 import { Queue } from "bullmq";
+import { HuggingFaceTransformersEmbeddings } from "@langchain/community/embeddings/huggingface_transformers";
+import { QdrantVectorStore } from "@langchain/qdrant";
 
 const queue = new Queue("file-upload-queue", {
   connection: {
@@ -47,6 +49,23 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     message: "File uploaded successfully",
     fileName: req.file.filename,
   });
+});
+
+app.get("/chat", async (req, res) => {
+  const userQuery = "What are Saima Khan's main skills?";
+  const model = new HuggingFaceTransformersEmbeddings({
+    model: "Xenova/all-MiniLM-L6-v2",
+  });
+  const vectorStore = await QdrantVectorStore.fromExistingCollection(model, {
+    url: "http://localhost:6333",
+
+    collectionName: "pdf_vectors",
+  });
+  const retrivever = vectorStore.asRetriever({
+    k: 2,
+  });
+  const result = await retrivever.invoke(userQuery);
+  return res.json({ result });
 });
 
 app.listen(PORT, () => {

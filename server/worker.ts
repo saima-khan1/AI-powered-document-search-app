@@ -45,7 +45,7 @@ const worker = new Worker(
         collectionName: "pdf_vectors",
       }
     );
-    await vectorStore.addDocuments(splitDocs);
+
     console.log(`✅ Stored embeddings in Qdrant`);
   },
   {
