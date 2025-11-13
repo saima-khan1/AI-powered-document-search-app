@@ -1,3 +1,4 @@
+import ChatBot from "./components/chatbot";
 import FileUpload from "./components/file-upload";
 import Navbar from "./components/navbar";
 
@@ -14,7 +15,9 @@ export default function Home() {
             <FileUpload />
           </div>
         </div>
-        <div className="w-[60vh] min-h-screen border-l-1">Chatbot</div>
+        <div className="w-[60vh] min-h-screen border-l-1">
+          <ChatBot />
+        </div>
       </div>
     </div>
   );
