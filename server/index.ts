@@ -68,30 +68,27 @@ app.post("/chat", async (req, res) => {
     collectionName: "pdf_vectors",
   });
   const retrivever = vectorStore.asRetriever({
-    k: 2,
+    // k: 4,
   });
   const result = await retrivever.invoke(query);
-  //   const SYSTEM_PROMPT = `You are an AI assistant that answers questions strictly based on the content of the uploaded document.
-  // Follow these rules:
-  // - Use ONLY the information provided in the document context.
-  // - If the answer is not found in the document, respond with "The document does not provide that information."
-  // - Answer concisely and clearly, using bullet points or short paragraphs.
-  // - Do not include external knowledge, assumptions, or examples unless explicitly stated in the document.
-  // - If the question refers to a problem or topic, extract the corresponding solution, explanation, or relevant section directly from the text.
+  const SYSTEM_PROMPT = `You are an AI assistant that answers questions strictly based on the content of the uploaded document.
+  Follow these rules:
+  - Use ONLY the information provided in the document context.
+  - If the answer is not found in the document, respond with "The document does not provide that information."
+  - Answer concisely and clearly, using bullet points or short paragraphs.
+  - Do not include external knowledge, assumptions, or examples unless explicitly stated in the document.
+  - If the question refers to a problem or topic, extract the corresponding solution, explanation, or relevant section directly from the text.
 
-  // Your goal: provide accurate, context-grounded, and concise answers about the uploaded document.
-  // Context:${JSON.stringify(result)}`;
+  Your goal: provide accurate, context-grounded, and concise answers about the uploaded document.
+  Context:${JSON.stringify(result)}`;
 
-  const context = result.map((d) => d.pageContent).join("\n");
   const response = await client.chat.completions.create({
     model: "ai/gemma3:270M-F16",
     messages: [
-      { role: "system", content: "You are a helpful assistant." },
-      {
-        role: "user",
-        content: `Use the following context to answer:\n${context}\n\nQuestion: ${query}`,
-      },
+      { role: "system", content: SYSTEM_PROMPT },
+      { role: "user", content: query },
     ],
+    temperature: 0.2,
     max_tokens: 300,
   });
 
