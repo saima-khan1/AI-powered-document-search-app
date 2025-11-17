@@ -3,7 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import React, { useEffect, useRef, useState } from "react";
 import { sendMessage } from "../services/fetchapi";
-
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 interface IMessage {
   role: "assistant" | "user";
   content?: string;
@@ -66,7 +68,41 @@ const ChatBot = () => {
                   : "bg-gray-200 text-gray-900"
               }`}
             >
-              {msg.content}
+              {msg.role === "assistant" ? (
+                <div className="prose max-w-full">
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    components={{
+                      code(props) {
+                        const { inline, className, children, ...rest } =
+                          props as any;
+                        const match = /language-(\w+)/.exec(className || "");
+
+                        return !inline && match ? (
+                          <SyntaxHighlighter
+                            language={match[1]}
+                            PreTag="div"
+                            {...rest}
+                          >
+                            {String(children).replace(/\n$/, "")}
+                          </SyntaxHighlighter>
+                        ) : (
+                          <code
+                            className="bg-gray-200 px-1 py-0.5 rounded"
+                            {...rest}
+                          >
+                            {children}
+                          </code>
+                        );
+                      },
+                    }}
+                  >
+                    {msg.content}
+                  </ReactMarkdown>
+                </div>
+              ) : (
+                msg.content
+              )}
             </div>
           </div>
         ))}{" "}
