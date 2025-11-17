@@ -59,6 +59,42 @@ app.post("/upload", upload.single("file"), async (req, res) => {
 
 app.post("/chat", async (req, res) => {
   const { query } = req.body;
+  const greetings = [
+    "hi",
+    "hello",
+    "hey",
+    "yo",
+    "hola",
+    "sup",
+    "good morning",
+    "good evening",
+    "good afternoon",
+  ];
+  const normalized = query.toLowerCase().trim();
+
+  if (greetings.includes(normalized)) {
+    return res.json({
+      answer: "Hello! How can I help you with the document?",
+      docs: [],
+    });
+  }
+  const smallTalkResponses: Record<string, string> = {
+    great: "Great! Let me know if you'd like anything else from the document.",
+    thanks: "You're welcome! Happy to help.",
+    "thank you": "You're welcome! Let me know if you need anything else.",
+    "how are you?": "I’m doing great, thank you for asking! 😊",
+    ok: "Okay! Let me know if you want to explore more.",
+    nice: "Nice! If you have any questions about the document, feel free to ask.",
+    cool: "Cool! Let me know how I can help next.",
+    awesome: "Awesome! Want to ask anything from the document?",
+  };
+
+  if (smallTalkResponses[normalized]) {
+    return res.json({
+      answer: smallTalkResponses[normalized],
+      docs: [],
+    });
+  }
   const model = new HuggingFaceTransformersEmbeddings({
     model: "Xenova/all-MiniLM-L6-v2",
   });
@@ -71,6 +107,9 @@ app.post("/chat", async (req, res) => {
     // k: 4,
   });
   const result = await retrivever.invoke(query);
+  const cleanedContext = result
+    .map((doc) => doc.pageContent)
+    .join("\n\n---\n\n");
   const SYSTEM_PROMPT = `You are an AI assistant that answers questions strictly based on the content of the uploaded document.
   Follow these rules:
   - Use ONLY the information provided in the document context.
@@ -78,9 +117,10 @@ app.post("/chat", async (req, res) => {
   - Answer concisely and clearly, using bullet points or short paragraphs.
   - Do not include external knowledge, assumptions, or examples unless explicitly stated in the document.
   - If the question refers to a problem or topic, extract the corresponding solution, explanation, or relevant section directly from the text.
-
+ 
   Your goal: provide accurate, context-grounded, and concise answers about the uploaded document.
-  Context:${JSON.stringify(result)}`;
+  Context:${cleanedContext}
+`;
 
   const response = await client.chat.completions.create({
     model: "ai/gemma3:270M-F16",

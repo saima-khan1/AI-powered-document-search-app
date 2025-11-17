@@ -52,7 +52,7 @@ const ChatBot = () => {
     if (e.key === "Enter") handleSubmit();
   };
   return (
-    <div className="flex flex-col h-screen p-4 bg-gray-50">
+    <div className="flex flex-col  h-screen  p-4 bg-gray-50">
       <div className="flex-1 overflow-y-auto mb-4 p-2 rounded-lg border bg-white shadow-sm">
         {responses.map((msg, index) => (
           <div
