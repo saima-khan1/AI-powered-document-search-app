@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoCloudUploadOutline, IoDocumentTextOutline } from "react-icons/io5";
 
 import { uploadFile } from "../services/fetchapi";
@@ -14,6 +14,16 @@ const FileUpload: React.FC = () => {
   const [fileName, setFileName] = useState("");
   const [uploading, setUploading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<IFile[]>([]);
+
+  useEffect(() => {
+    const savedFiles = localStorage.getItem("uploadedFiles");
+    if (savedFiles) {
+      setUploadedFile(JSON.parse(savedFiles));
+    }
+  }, []);
+  useEffect(() => {
+    localStorage.setItem("uploadedFiles", JSON.stringify(uploadedFile));
+  }, [uploadedFile]);
 
   const handleFileUpload = () => {
     fileInputRef.current?.click();
@@ -31,10 +41,13 @@ const FileUpload: React.FC = () => {
     try {
       setUploading(true);
       const result = await uploadFile(file);
-      setUploadedFile((prev) => [
-        ...prev,
-        { name: result.fileName, uploadedAt: new Date().toLocaleString() },
-      ]);
+
+      const newFile: IFile = {
+        name: result.fileName,
+        uploadedAt: new Date().toLocaleString(),
+      };
+
+      setUploadedFile((prev) => [...prev, newFile]);
       console.log(result, "result");
     } catch (err) {
       console.error("upload failed", err);
