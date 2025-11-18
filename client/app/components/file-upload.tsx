@@ -1,13 +1,19 @@
 "use client";
 import React, { useRef, useState } from "react";
-import { IoCloudUploadOutline } from "react-icons/io5";
+import { IoCloudUploadOutline, IoDocumentTextOutline } from "react-icons/io5";
+
 import { uploadFile } from "../services/fetchapi";
+
+interface IFile {
+  name: string;
+  uploadedAt: string;
+}
 
 const FileUpload: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [fileName, setFileName] = useState("");
   const [uploading, setUploading] = useState(false);
-  const [uploadedFile, setUploadedFile] = useState<string>("");
+  const [uploadedFile, setUploadedFile] = useState<IFile[]>([]);
 
   const handleFileUpload = () => {
     fileInputRef.current?.click();
@@ -25,7 +31,11 @@ const FileUpload: React.FC = () => {
     try {
       setUploading(true);
       const result = await uploadFile(file);
-      setUploadedFile(result.fileName);
+      setUploadedFile((prev) => [
+        ...prev,
+        { name: result.fileName, uploadedAt: new Date().toLocaleString() },
+      ]);
+      console.log(result, "result");
     } catch (err) {
       console.error("upload failed", err);
     } finally {
@@ -51,13 +61,27 @@ const FileUpload: React.FC = () => {
             onChange={handleFileChange}
             style={{ display: "none" }}
           />
-          {uploading && <p className="text-yellow-400 text-lg ">Uploading</p>}
-          {fileName && !uploading && <p>{fileName}</p>}
-          {uploadedFile && !uploading && (
-            <p className="text-green-400 text-lg">
-              ✅ Uploaded: {uploadedFile}
-            </p>
+        </div>
+        {uploading && <p className="text-yellow-400 text-lg ">Uploading</p>}
+        <div className="flex flex-col gap-2">
+          {uploadedFile.length === 0 && !uploading && (
+            <p>No files uploaded yet</p>
           )}
+          {uploadedFile.map((file, index) => (
+            <div
+              key={index}
+              className="flex items-center justify-between p-3 bg-white shadow"
+            >
+              <div className="flex items-center gap-3">
+                <IoDocumentTextOutline className="text-5xl text-blue-600" />
+                <div className="flex flex-col">
+                  <p className="font-semibold">{file.name}</p>
+                  <p className="text-sm text-gray-500">{file.uploadedAt}</p>
+                </div>
+              </div>
+              <span className="text-green-500 font-semibold">✅ Uploaded</span>
+            </div>
+          ))}
         </div>
       </div>
     </div>

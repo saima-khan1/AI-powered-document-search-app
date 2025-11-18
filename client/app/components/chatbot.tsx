@@ -55,16 +55,16 @@ const ChatBot = () => {
     <div className="flex flex-col h-full w-full max-w-7xl  p-6 rounded-md border-4 bg-gray-50">
       {" "}
       <h2 className="font-light text-3xl ">Chatbot</h2>
-      <div className="flex-1    overflow-y-auto mb-4 p-4 rounded-xl border bg-white shadow">
+      <div className="flex-1    overflow-y-auto mb-4 p-4 rounded-xl border bg-white shadow font-semibold ">
         {responses.map((msg, index) => (
           <div
             key={index}
-            className={`my-3 flex ${
+            className={`my-3 text-xl flex ${
               msg.role === "user" ? "justify-end" : "justify-start"
             }`}
           >
             <div
-              className={`px-4 py-3 rounded-2xl max-w-[80%] text-sm ${
+              className={`px-4 py-3  text-xl rounded-2xl max-w-[80%]  ${
                 msg.role === "user"
                   ? "bg-blue-600 text-white"
                   : "bg-gray-200 text-gray-900"
@@ -108,7 +108,7 @@ const ChatBot = () => {
             </div>
           </div>
         ))}{" "}
-        {loading && <p className="text-gray-500 italic text-sm">Typing...</p>}
+        {loading && <p className="text-gray-500 italic text-xl">Typing...</p>}
         <div ref={chatEndRef} />
       </div>
       <div className="flex gap-3">
@@ -119,7 +119,7 @@ const ChatBot = () => {
           value={message}
           onChange={handleChange}
           onKeyDown={handleKeyPress}
-          className="flex-1"
+          className="flex-1 text-xl font-semibold"
         />
         <Button
           disabled={!message.trim() || loading}
