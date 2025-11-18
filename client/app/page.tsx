@@ -4,18 +4,15 @@ import Navbar from "./components/navbar";
 
 export default function Home() {
   return (
-    <div className="min-h-screen w-screen flex flex-col">
-      {" "}
+    <div className="h-screen w-screen flex flex-col  overflow-hidden ">
       <Navbar />
-      <div className="flex flex-1 flex-row">
-        <div className="w-[40vh] min-h-screen flex  justify-center py-30 ">
-          <div>
-            {" "}
-            <h1 className="font-bold text-3xl text-center">Hello, User</h1>
-            <FileUpload />
-          </div>
+
+      <div className="flex flex-1 flex-row  overflow-hidden">
+        <div className="w-[40vh] h-full flex justify-center items-start   rounded-md border-4  overflow-hidden">
+          <FileUpload />
         </div>
-        <div className="w-[60vh] min-h-screen border-l-1">
+
+        <div className="flex-1 h-full    overflow-hidden">
           <ChatBot />
         </div>
       </div>
