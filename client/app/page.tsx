@@ -1,4 +1,4 @@
-import ChatBot from "./components/chatbot";
+import ChatBot from "./components/chatBot/Chat";
 import FileUpload from "./components/file-upload";
 import Navbar from "./components/navbar";
 
