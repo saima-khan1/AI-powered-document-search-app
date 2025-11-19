@@ -15,6 +15,10 @@ export default function Home() {
         <div className="flex-1 h-full    overflow-hidden">
           <ChatBot />
         </div>
+
+        <footer className="fixed bottom-0 left-0 w-full text-center text-xs text-gray-1000 p-2 bg-gray-200">
+          Documind can be inaccurate; please double-check its responses.
+        </footer>
       </div>
     </div>
   );

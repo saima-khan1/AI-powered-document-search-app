@@ -52,7 +52,7 @@ const ChatBot = () => {
     if (e.key === "Enter") handleSubmit();
   };
   return (
-    <div className="flex flex-col h-full w-full max-w-7xl  p-6 rounded-md border-4 bg-gray-50">
+    <div className="flex flex-col h-full w-full max-w-8xl  p-6 rounded-md border-4 bg-gray-50">
       {" "}
       <h2 className="font-light text-3xl ">Chatbot</h2>
       <div className="flex-1    overflow-y-auto mb-4 p-4 rounded-xl border bg-white shadow font-semibold ">
@@ -111,7 +111,7 @@ const ChatBot = () => {
         {loading && <p className="text-gray-500 italic text-xl">Typing...</p>}
         <div ref={chatEndRef} />
       </div>
-      <div className="flex gap-3">
+      <div className="flex gap-3 mb-6 ">
         {" "}
         <Input
           type="text"
@@ -119,12 +119,13 @@ const ChatBot = () => {
           value={message}
           onChange={handleChange}
           onKeyDown={handleKeyPress}
-          className="flex-1 text-xl font-semibold"
+          className="flex-1 text-xl font-semibold h-16 px-4"
         />
         <Button
           disabled={!message.trim() || loading}
           onClick={handleSubmit}
           type="submit"
+          className="h-16 px-6"
         >
           {loading ? "Sending..." : "Send"}
         </Button>
