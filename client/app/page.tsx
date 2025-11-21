@@ -1,5 +1,5 @@
-import ChatBot from "./components/chatBot/Chat";
-import FileUpload from "./components/file-upload";
+import ChatBot from "./components/Chat/Chat";
+import FileUpload from "./components/UploadingFile/FileUpload";
 import Navbar from "./components/navbar";
 
 export default function Home() {
