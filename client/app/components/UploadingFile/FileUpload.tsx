@@ -4,7 +4,7 @@ import { IoCloudUploadOutline, IoDocumentTextOutline } from "react-icons/io5";
 
 import { uploadFile } from "../../services/fetchapi";
 import UploadButton from "./UploadButton";
-import { on } from "events";
+
 import FileInput from "./FileInput";
 import UploadedFileList from "./UploadedFileList";
 
