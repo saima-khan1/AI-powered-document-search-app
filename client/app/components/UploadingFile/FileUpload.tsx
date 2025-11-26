@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { IoCloudUploadOutline, IoDocumentTextOutline } from "react-icons/io5";
 
 import { uploadFile } from "../../services/fetchapi";
 import UploadButton from "./UploadButton";
@@ -28,6 +27,12 @@ const FileUpload: React.FC = () => {
   useEffect(() => {
     localStorage.setItem("uploadedFiles", JSON.stringify(uploadedFile));
   }, [uploadedFile]);
+
+  const handleDeleteFile = (name: string) => {
+    const updated = uploadedFile.filter((file) => file.name !== name);
+    setUploadedFile(updated);
+    localStorage.setItem("uploadedFiles", JSON.stringify(updated));
+  };
 
   const handleFileUpload = () => {
     fileInputRef.current?.click();
@@ -70,7 +75,7 @@ const FileUpload: React.FC = () => {
 
         {uploading && <p className="text-yellow-400 text-lg">Uploading...</p>}
 
-        <UploadedFileList files={uploadedFile} />
+        <UploadedFileList files={uploadedFile} onDelete={handleDeleteFile} />
       </div>
     </div>
   );

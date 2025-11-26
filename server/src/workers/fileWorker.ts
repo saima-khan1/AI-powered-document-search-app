@@ -7,6 +7,11 @@ import { HuggingFaceTransformersEmbeddings } from "@langchain/community/embeddin
 import * as dotenv from "dotenv";
 
 dotenv.config();
+console.log("🚀 Worker ready...");
+
+const embeddingModel = new HuggingFaceTransformersEmbeddings({
+  model: "Xenova/all-MiniLM-L6-v2",
+});
 
 const worker = new Worker(
   "file-upload-queue",
@@ -34,18 +39,32 @@ const worker = new Worker(
 
     console.log(`✅ Created ${splitDocs.length} chunks`);
 
-    const embeddings = new HuggingFaceTransformersEmbeddings({
-      model: "Xenova/all-MiniLM-L6-v2",
-    });
+    // const embeddings = new HuggingFaceTransformersEmbeddings({
+    //   model: "Xenova/all-MiniLM-L6-v2",
+    // });
 
-    await QdrantVectorStore.fromDocuments(splitDocs, embeddings, {
+    const vectorStore = new QdrantVectorStore(embeddingModel, {
       url: "http://localhost:6333",
       collectionName: "pdf_vectors",
     });
+    const batchSize = 30;
 
-    console.log("✅ Stored embeddings in Qdrant");
+    console.log("⏳ Embedding and storing chunks...");
+
+    for (let i = 0; i < splitDocs.length; i += batchSize) {
+      const batch = splitDocs.slice(i, i + batchSize);
+      await vectorStore.addDocuments(batch);
+      console.log(`✔️ Stored ${i + batch.length}/${splitDocs.length}`);
+    }
+
+    console.log("🎉 All chunks stored in Qdrant!");
   },
-  { connection: { host: "localhost", port: 6379 }, concurrency: 100 }
+
+  {
+    connection: { host: "localhost", port: 6379 },
+    concurrency: 1,
+    lockDuration: 600000,
+  }
 );
 
 export default worker;
